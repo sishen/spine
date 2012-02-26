@@ -99,6 +99,7 @@ class Model extends Module
     @attributes = attributes if attributes.length
     @attributes and= makeArray(@attributes)
     @attributes or=  []
+    @previousAttributes = []
     @unbind()
     this
 
@@ -132,6 +133,7 @@ class Model extends Module
 
     for record in records
       record.id           or= record.cid
+      record.previousAttributes = record.attributes()
       @records[record.id]   = record
       @crecords[record.cid] = record
 
@@ -282,6 +284,7 @@ class Model extends Module
     record = if @isNew() then @create(options) else @update(options)
     @stripCloneAttrs()
     @trigger('save', options)
+    record.previousAttributes = record.attributes()
     record
 
   stripCloneAttrs: ->
@@ -291,8 +294,9 @@ class Model extends Module
     this
 
   updateAttribute: (name, value, options) ->
-    @[name] = value
-    @save(options)
+    atts = {}
+    atts[name] = value
+    @updateAttributes(atts, options)
 
   updateAttributes: (atts, options) ->
     @load(atts)
