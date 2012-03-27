@@ -2,7 +2,7 @@ Spine ?= require('spine')
 
 Include =
   savePrevious: ->
-    @constructor.records[@id].previousAttributes = $.extend(true, {}, @attributes())
+    @constructor.records[@id].previousAttributes = @attributes()
 
 Spine.Model.Dirty =
   extended: ->
