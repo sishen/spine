@@ -6,8 +6,8 @@ Include =
 
 Spine.Model.Dirty =
   extended: ->
-    @bind 'refresh', (records) ->
-      record.savePrevious() for record in records
+    @bind 'refresh', ->
+      @each (record) -> record.savePrevious()
 
     @bind 'save', (record) ->
       if record.previousAttributes?
