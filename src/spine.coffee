@@ -175,9 +175,9 @@ class Model extends Module
     for key, value of @records
       delete @records[key]
 
-  @destroyAll: ->
+  @destroyAll: (options) ->
     for key, value of @records
-      @records[key].destroy()
+      @records[key].destroy(options)
 
   @update: (id, atts, options) ->
     @find(id).updateAttributes(atts, options)
@@ -291,9 +291,8 @@ class Model extends Module
     this
 
   updateAttribute: (name, value, options) ->
-    atts = {}
-    atts[name] = value
-    @updateAttributes(atts, options)
+    @[name] = value
+    @save(options)
 
   updateAttributes: (atts, options) ->
     @load(atts)
