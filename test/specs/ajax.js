@@ -103,7 +103,7 @@ describe("Ajax", function(){
       processData: false,
       type:        'DELETE',
       url:         '/users/IDD'
-    })
+    });
   });
 
   it("can update record after PUT/POST", function(){
@@ -148,7 +148,7 @@ describe("Ajax", function(){
 
     expect(jQuery.ajax).toHaveBeenCalled();
 
-    jQuery.ajax.reset()
+    jQuery.ajax.reset();
 
     User.create({first: "Second"});
 
@@ -247,4 +247,21 @@ describe("Ajax", function(){
     expect(user.url()).toBe('http://example.com/users/1');
   });
 
+  it("should scope by admin url", function(){
+    Spine.Model.host = '';
+    User.scope = "admin";
+    expect(User.url()).toBe('/admin/users');
+
+    var user = new User({id: 1});
+    expect(user.url()).toBe('/admin/users/1');
+
+    User.scope = function() { return "/roots/1"; };
+    expect(User.url()).toBe('/roots/1/users');
+    expect(user.url()).toBe('/roots/1/users/1');
+    expect(user.url('custom')).toBe('/roots/1/users/1/custom');
+
+    Spine.Model.host = 'http://example.com';
+    expect(User.url()).toBe('http://example.com/roots/1/users');
+    expect(user.url()).toBe('http://example.com/roots/1/users/1');
+  });
 });

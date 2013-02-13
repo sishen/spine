@@ -192,6 +192,10 @@ Extend =
 
   url: (args...) ->
     args.unshift(@className.toLowerCase() + 's')
+    scope = this.scope?() or this.scope
+    if scope?
+      scope = scope.substring(1) if scope.charAt(0) is '/'
+      args.unshift(scope)
     args.unshift(Model.host)
     args.join('/')
 
