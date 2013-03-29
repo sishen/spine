@@ -47,9 +47,15 @@ class Collection extends Spine.Module
 
     @model.trigger('refresh', @model.cloneArray(records))
 
-  create: (record) ->
+  create: (record, options) ->
     record[@fkey] = @record.id
-    @model.create(record)
+    @model.create(record, options)
+
+  add: (record, options) ->
+    record.updateAttribute @fkey, @record.id, options
+
+  remove: (record, options) ->
+    record.updateAttribute @fkey, null, options
 
   # Private
 
@@ -62,7 +68,7 @@ class Instance extends Spine.Module
       @[key] = value
 
   exists: ->
-    @record[@fkey] and @model.exists(@record[@fkey])
+    return if @record[@fkey] then @model.exists(@record[@fkey]) else false
 
   update: (value) ->
     unless value instanceof @model
@@ -142,7 +148,7 @@ Spine.Model.extend
     @::[name] = (value) ->
       association(@).update(value) if value?
       association(@).find()
-	  
+
 Spine.Collection = Collection
 Spine.Singleton = Singleton
 Spine.Instance = Instance
