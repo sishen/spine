@@ -1,10 +1,11 @@
-Spine ?= require('spine')
+Spine  = @Spine or require('spine')
+Model  = Spine.Model
 
 Include =
   savePrevious: ->
     @constructor.records[@id].previousAttributes = @attributes()
 
-Spine.Model.Dirty =
+Model.Dirty =
   extended: ->
     @bind 'refresh', ->
       @each (record) -> record.savePrevious()
